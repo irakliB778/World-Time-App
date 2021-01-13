@@ -19,7 +19,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await Navigator.pushReplacementNamed(context, '/Home', arguments: {
       'location': instance.location,
       'flag': instance.flag,
-      'time': instance.time
+      'time': instance.time,
+      'isdaytime': instance.isDayTime
     });
   }
 
@@ -35,10 +36,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return Scaffold(
         backgroundColor: Colors.blue[600],
         body: Center(
-          child: SpinKitDoubleBounce(
+          child: SpinKitSquareCircle(
             color: Colors.amber,
             size: 70.0,
-            duration: Duration(microseconds: 500),
+            duration: Duration(seconds: 1),
           ),
         ));
   }
