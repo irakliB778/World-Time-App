@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:world_time_app/services/WorldTime.dart';
 // import 'dart:async';
 
@@ -11,14 +12,14 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  String currentTime = 'loading...';
-
   Future<String> startworldtime() async {
     WorldTime instance =
         WorldTime(location: 'Tbilisi', url: 'Asia/Tbilisi', flag: '');
     await instance.getTime();
-    setState(() {
-      currentTime = instance.time;
+    await Navigator.pushReplacementNamed(context, '/Home', arguments: {
+      'location': instance.location,
+      'flag': instance.flag,
+      'time': instance.time
     });
   }
 
@@ -32,10 +33,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(60),
-        child: Text('$currentTime'),
-      ),
-    );
+        backgroundColor: Colors.blue[600],
+        body: Center(
+          child: SpinKitDoubleBounce(
+            color: Colors.amber,
+            size: 70.0,
+            duration: Duration(microseconds: 500),
+          ),
+        ));
   }
 }
