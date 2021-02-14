@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:world_time_app/model/time_data.dart';
+import 'package:world_time_app/model/weather.dart';
 
-import 'package:world_time_app/services/WorldTime.dart';
-// import 'dart:async';
+import 'package:world_time_app/services/api_repo.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -12,22 +11,37 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  Future<String> startworldtime() async {
-    WorldTime instance =
-        WorldTime(location: 'Tbilisi', url: 'Asia/Tbilisi', flag: '');
-    await instance.getTime();
-    await Navigator.pushReplacementNamed(context, '/Home', arguments: {
-      'location': instance.location,
-      'flag': instance.flag,
-      'time': instance.time,
-      'isdaytime': instance.isDayTime
-    });
+  ApiRepo api = ApiRepo();
+
+  Future<void> startworldtime() async {
+    TimeData timeData = TimeData(
+      location: 'Tbilisi',
+      url: 'Asia/Tbilisi',
+      flag: '',
+    );
+    Weather weatherData;
+
+    timeData = await api.getTime(timeData);
+    weatherData = await api.getWeather(timeData);
+    print(weatherData.temp);
+    await Navigator.pushReplacementNamed(
+      context,
+      '/Home',
+      arguments: {
+        'location': timeData.location,
+        'flag': timeData.flag,
+        'time': timeData.time,
+        'isdaytime': timeData.isDayTime,
+        'weather': weatherData.weather,
+        'temp': weatherData.temp,
+        'windspeed': weatherData.windspeed
+      },
+    );
   }
 
   @override
   void initState() {
     startworldtime();
-    // TODO: implement initStat
     super.initState();
   }
 
